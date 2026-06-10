@@ -1,0 +1,5 @@
+**Signal Analyser**
+
+![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+
+Uses a [Fourier Transform](https://www.desmos.com/calculator/il9blockap) that I made a while ago on desmos to try and reconstruct the original as closely as possible
