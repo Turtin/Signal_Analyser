@@ -3,7 +3,6 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
-#include <list>
 #include <vector>
 
 #define MINIMP3_IMPLEMENTATION
@@ -11,7 +10,11 @@
 
 namespace fs = std::filesystem;
 
-void mp3Reader::getFile() {
+// Finds a sound file to read and attempts to read it
+// Out puts the SoundData struct with all the information about the file and its data
+mp3Reader::SoundData mp3Reader::getFile() {
+    SoundData data; // Holds the data to output
+
     std::cout << "Searching for mp3 files..." << std::endl;
 
     fs::path runningDir = fs::current_path();
@@ -29,7 +32,7 @@ void mp3Reader::getFile() {
         std::cout << e.what() << std::endl;
     }
 
-    if (files.size() == 0) {
+    if (files.empty()) {
         std::cout << "No mp3 files found in " << runningDir.parent_path() << std::endl;
     } else if (files.size() == 1) {
         std::cout << "Found File at: " << files.front().string() << std::endl
@@ -45,7 +48,7 @@ void mp3Reader::getFile() {
 
     if (!file.is_open()) {
         std::cout << "Unable to open file" << std::endl;
-        return;
+        throw FileGetError("Unable to open file");
     }
 
     // loading data into memory
@@ -55,31 +58,40 @@ void mp3Reader::getFile() {
     std::vector<uint8_t> buffer(size);
     if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) {
         std::cout << "Unable to read file" << std::endl;
-        return;
+        throw FileGetError("Unable to read file");
     }
 
     // initialising decoder
     mp3dec_ex_t dec;
     if (mp3dec_ex_open_buf(&dec, buffer.data(), buffer.size(), 0) != 0) {
         std::cout << "Unable to open mp3 file" << std::endl;
-        return;
+        throw FileGetError("Unable to open mp3 file");
     }
 
     std::vector<mp3d_sample_t> pcmSamples(dec.samples);
-    size_t samplesCount = mp3dec_ex_read(&dec, pcmSamples.data(), pcmSamples.size());
 
-    double duration = (static_cast<double>(pcmSamples.size()) / dec.info.channels) / dec.info.hz;
+    // storing the data to output
+    data.samplesCount = mp3dec_ex_read(&dec, pcmSamples.data(), pcmSamples.size());
+    data.duration = (static_cast<double>(pcmSamples.size()) / dec.info.channels) / dec.info.hz;
+    data.resolution = data.duration / static_cast<double>(pcmSamples.size());
+    data.soundSamples = std::move(pcmSamples);
 
     mp3dec_ex_close(&dec);
 
+    return data;
+}
+
+// Temporary function to help visualise the wave in the sound file
+std::string mp3Reader::convertToDesmos(const SoundData& sound_data) {
+    std::vector<mp3d_sample_t> audioSamples = sound_data.soundSamples;
+
     std::stringstream ss;
     ss << "[";
-    double resolution = duration / static_cast<double>(pcmSamples.size());
-    for (int i = 0; i < samplesCount; i+=100) {
-        ss << "(" << resolution * i << "," << pcmSamples[i] << "),";
+    for (int i = 0; i < sound_data.samplesCount; i+=100) {
+        ss << "(" << sound_data.resolution * i << "," << audioSamples[i] << "),";
     }
-
     ss << "]";
 
     std::cout << ss.str() << std::endl;
+    return ss.str();
 }
