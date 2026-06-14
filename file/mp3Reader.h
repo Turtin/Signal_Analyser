@@ -37,6 +37,8 @@ public:
     static SoundData getFile();
     // Temporary function to help visualise the wave in the sound file
     [[deprecated]] static std::string convertToDesmos(const SoundData& sound_data);
+    // Converts vector<mp3d_sample_t> to vector<double>
+    static std::vector<double> castAudioSample(const std::vector<mp3d_sample_t> original);
 };
 
 

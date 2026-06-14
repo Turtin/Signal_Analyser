@@ -2,11 +2,13 @@
 
 #include "file/mp3Reader.h"
 #include "math/Complex.h"
+#include "math/FourierTransform.cpp"
 
 int main() {
-    mp3Reader::convertToDesmos(mp3Reader::getFile());
+    auto *mp3 = new mp3Reader();
+    auto data = mp3->getFile();
+    FourierTransformer::fourier(mp3Reader::castAudioSample(data.soundSamples), data.duration, data.samplesCount);
 
 
-    std::cout << num.cartesian.imag.value() << std::endl;
     return 0;
 }

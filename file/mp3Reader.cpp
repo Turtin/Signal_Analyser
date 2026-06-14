@@ -95,3 +95,13 @@ std::string mp3Reader::convertToDesmos(const SoundData& sound_data) {
     std::cout << ss.str() << std::endl;
     return ss.str();
 }
+
+std::vector<double> mp3Reader::castAudioSample(const std::vector<mp3d_sample_t> original) {
+    std::vector<double> data;
+
+    for (const mp3d_sample_t point : original) {
+        data.emplace_back(point);
+    }
+
+    return data;
+}

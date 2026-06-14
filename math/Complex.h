@@ -43,7 +43,7 @@ public:
     }
 
     // Multiples another complex number by self, returns self
-    Complex* multiply_s(const Complex* num) {
+    Complex* multiply_s(const Complex *num) {
         this->polar.theta = this->polar.theta.value() + num->polar.theta.value();
         this->polar.r = this->polar.r.value() * num->polar.r.value();
 
@@ -52,7 +52,7 @@ public:
     }
 
     // Bulk add complex numbers and returns a new complex number
-    static Complex add(const std::list<Complex>& nums) {
+    static Complex add(const std::vector<Complex>& nums) {
         CartCoord coordinate{};
         coordinate.real = 0;
         coordinate.imag = 0;
@@ -65,7 +65,7 @@ public:
         return Complex(coordinate);
     }
 
-    static Complex multiply(const std::list<Complex>& nums) {
+    static Complex multiply(const std::vector<Complex>& nums) {
         PolarCoord coordinate{};
 
         for (Complex num : nums) {
