@@ -7,8 +7,9 @@
 int main() {
     auto *mp3 = new mp3Reader();
     auto data = mp3->getFile();
-    FourierTransformer::fourier(mp3Reader::castAudioSample(data.soundSamples), data.duration, data.samplesCount);
+    FourierTransformer::run(mp3Reader::castAudioSample(data.soundSamples), data.duration);
 
+    // mp3Reader::convertToDesmos(data);
 
     return 0;
 }
