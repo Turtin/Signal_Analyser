@@ -37,7 +37,7 @@ public:
 
             values.emplace_back(coord); // Constructs the object inside the container basically runs faster
         }
-
+        // temp for testing
         std::cout << "[";
         for (int i = 0; i < 500; i++) {
             double t = i / 20.0 * std::numbers::pi;
