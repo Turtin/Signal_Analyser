@@ -10,3 +10,7 @@ add_executable(Signal_Analyser main.cpp
         math/complex.h)
 
 target_include_directories(Signal_Analyser PRIVATE include)
+
+if(WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+endif()

@@ -9,13 +9,13 @@ class Complex {
 public:
     // Cartesian
     struct CartCoord {
-        std::optional<double >real;
-        std::optional<double> imag;
+        double real = 0;
+        double imag = 0;
     } cartesian;
     // Polar
     struct PolarCoord {
-        std::optional<double> theta;
-        std::optional<double> r;
+        double theta = 0;
+        double r = 0;
     } polar;
 
     // Initialises the variables
@@ -35,8 +35,8 @@ public:
 
     // Adds another complex number to this object, returns self
     Complex* add_s(const Complex* num) {
-        this->cartesian.real.value() += num->cartesian.real.value();
-        this->cartesian.imag.value() += num->cartesian.imag.value();
+        this->cartesian.real += num->cartesian.real;
+        this->cartesian.imag += num->cartesian.imag;
 
         updatePolar();
         return this;
@@ -44,8 +44,8 @@ public:
 
     // Multiples another complex number by self, returns self
     Complex* multiply_s(const Complex *num) {
-        this->polar.theta = this->polar.theta.value() + num->polar.theta.value();
-        this->polar.r = this->polar.r.value() * num->polar.r.value();
+        this->polar.theta = this->polar.theta + num->polar.theta;
+        this->polar.r = this->polar.r * num->polar.r;
 
         updateCart();
         return this;
@@ -58,8 +58,8 @@ public:
         coordinate.imag = 0;
 
         for (Complex num : nums) {
-            coordinate.real.value() += num.cartesian.real.value();
-            coordinate.imag.value() += num.cartesian.imag.value();
+            coordinate.real += num.cartesian.real;
+            coordinate.imag += num.cartesian.imag;
         }
 
         return Complex(coordinate);
@@ -69,14 +69,14 @@ public:
         PolarCoord coordinate{};
 
         for (Complex num : nums) {
-            if (!coordinate.r.has_value()) {
+            if (coordinate.r == 0) {
                 coordinate.r = num.polar.r;
                 coordinate.theta = num.polar.theta;
                 continue;
             }
 
-            coordinate.r.value()  = coordinate.r.value() * num.polar.r.value();
-            coordinate.theta = coordinate.theta.value() + num.polar.theta.value();
+            coordinate.r  = coordinate.r * num.polar.r;
+            coordinate.theta = coordinate.theta + num.polar.theta;
         }
 
         return Complex(coordinate);
@@ -84,13 +84,13 @@ public:
 
     private:
     void updatePolar() {
-        this->polar.r =  std::sqrt(this->cartesian.real.value() * this->cartesian.real.value() + this->cartesian.imag.value() * this->cartesian.imag.value());
-        this->polar.theta = atan2(this->cartesian.imag.value(), this->cartesian.real.value());
+        this->polar.r =  std::sqrt(this->cartesian.real * this->cartesian.real + this->cartesian.imag * this->cartesian.imag);
+        this->polar.theta = atan2(this->cartesian.imag, this->cartesian.real);
     }
 
     void updateCart() {
-        this->cartesian.real = this->polar.r.value() * cos(this->polar.theta.value());
-        this->cartesian.imag = this->polar.r.value() * sin(this->polar.theta.value());
+        this->cartesian.real = this->polar.r * cos(this->polar.theta);
+        this->cartesian.imag = this->polar.r * sin(this->polar.theta);
     }
 };
 
