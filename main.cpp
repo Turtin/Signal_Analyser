@@ -10,7 +10,7 @@ int main() {
     auto stuff = FourierTransformer::run(mp3Reader::castAudioSample(data.soundSamples), data.duration);
 
     for (auto& wave : stuff) {
-        std::cout << wave.amp << "sin(" << wave.phase << "x-" << wave.shift << ")" << std::endl;
+        std::cout << wave.amp << "sin(" << wave.phase << "x+" << wave.shift << ")" << std::endl;
     }
     // mp3Reader::convertToDesmos(data);
 
