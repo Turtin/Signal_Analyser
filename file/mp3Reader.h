@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <filesystem>
 
 #include "minimp3.h"
 
@@ -17,6 +18,8 @@ private:
         size_t samplesCount;
         std::vector<mp3d_sample_t> soundSamples;
     };
+
+    static std::filesystem::path fileSelect(const std::vector<std::filesystem::path>& files);
 
     // Custom error to throw when the attempt to get the sound data fails
     class FileGetError : public std::exception {
@@ -38,7 +41,7 @@ public:
     // Temporary function to help visualise the wave in the sound file
     [[deprecated]] static std::string convertToDesmos(const SoundData& sound_data);
     // Converts vector<mp3d_sample_t> to vector<double>
-    static std::vector<double> castAudioSample(const std::vector<mp3d_sample_t> original);
+    static std::vector<double> castAudioSample(const std::vector<mp3d_sample_t> &original);
 };
 
 

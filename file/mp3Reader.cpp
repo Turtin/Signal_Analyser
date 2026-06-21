@@ -6,9 +6,25 @@
 #include <vector>
 
 #define MINIMP3_IMPLEMENTATION
+#include "../cmd/SelectionGrid.h"
 #include "../include/minimp3_ex.h"
 
 namespace fs = std::filesystem;
+
+// Gets the user input for which file to use and outputs it
+fs::path mp3Reader::fileSelect(const std::vector<fs::path>& files) {
+    std::vector<std::string> paths;
+
+    for (const fs::path& path : files) { // convert type
+        paths.push_back(path.filename().string());
+    }
+
+    SelectionGrid grid(paths); // Get user input
+    grid.create();
+
+    return fs::path(grid.result);
+}
+
 
 // Finds a sound file to read and attempts to read it
 // Out puts the SoundData struct with all the information about the file and its data
@@ -18,11 +34,11 @@ mp3Reader::SoundData mp3Reader::getFile() {
     std::cout << "Searching for mp3 files..." << std::endl;
 
     fs::path runningDir = fs::current_path();
-    std::list<fs::path> files;
+    std::vector<fs::path> files;
     fs::path signalFile;
 
     // finding and selecting the file the process
-    try {
+    try { // Gets a list of compatible files
         for (const auto& entry: fs::directory_iterator(runningDir)) {
             if (entry.is_regular_file() && entry.path().extension() == ".mp3") {
                 files.push_back(entry.path());
@@ -32,6 +48,7 @@ mp3Reader::SoundData mp3Reader::getFile() {
         std::cout << e.what() << std::endl;
     }
 
+    // selecting and handling the files
     if (files.empty()) {
         std::cout << "No mp3 files found in " << runningDir.parent_path() << std::endl;
     } else if (files.size() == 1) {
@@ -41,6 +58,7 @@ mp3Reader::SoundData mp3Reader::getFile() {
         signalFile = files.front();
     } else {
         std::cout << "Found " << files.size() << " mp3 files" << std::endl;
+        signalFile = fileSelect(files);
     }
 
     // Opening the file
@@ -96,7 +114,7 @@ std::string mp3Reader::convertToDesmos(const SoundData& sound_data) {
     return ss.str();
 }
 
-std::vector<double> mp3Reader::castAudioSample(const std::vector<mp3d_sample_t> original) {
+std::vector<double> mp3Reader::castAudioSample(const std::vector<mp3d_sample_t> &original) {
     std::vector<double> data;
 
     for (const mp3d_sample_t point : original) {
