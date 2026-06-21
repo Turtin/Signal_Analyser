@@ -57,7 +57,7 @@ This project is still in development so alot of features may be missing still
 
 Overall however, the usage may vary depending on your use case, for a general user:
 
-1) Download the newest version of the analyser. ([Click here to access the newest build](https://github.com/Turtin/Signal_Analyser/latest))
+1) Download the newest version of the analyser. ([Click here to access the newest build](https://github.com/Turtin/Signal_Analyser/releases/latest))
 Make sure to download the file called "Signal_Analyser.exe"
 
 2) Place the file in a folder with your desired sound file(s), test files have also been provided
