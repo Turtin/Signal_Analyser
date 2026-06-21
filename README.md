@@ -37,7 +37,7 @@ This table will probably get bigger too. I'm having fun and thats what counts.
 |          Read data from mp3 files           |   ✅    |
 |          Read data from CSV files           |   ❌    |
 | Transform data and recreate wave components |   ✅    |
-|        An intuitive and complete CLI        |   ❌    |
+|        An intuitive and complete CLI        |   ✅    |
 |              CLI command flags              |   ❌    |
 |               Output to file                |   ❌    |
 
